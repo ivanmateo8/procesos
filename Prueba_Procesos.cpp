@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-
+//comment actualizado
 class ProcessNode
 {
 public:
@@ -100,6 +100,7 @@ public:
 private:
 	ProcessNode* head;
 	ProcessNode* tail;
+	ProcessNode* ptrTemp; //pointer temporal para usar en distintas funciones
 };
 
 ProcessList::ProcessList()
@@ -109,55 +110,79 @@ ProcessList::ProcessList()
 
 ProcessList::~ProcessList()
 {
-	ProcessNode *ptrNode = head;
+	ptrTemp = head;
 
-	while (ptrNode != 0)
+	while (ptrTemp != 0)
 	{
-		ptrNode = head->getNext();
+		ptrTemp = head->getNext();
 		delete head;
-		head = ptrNode;
+		head = ptrTemp;
 	}
 
-	ptrNode = 0;
-	delete ptrNode;
+	ptrTemp = 0;
 }
 void ProcessList::addToTail(int id, int burst, int arrival)
 {
-	ProcessNode* ptrNode = new ProcessNode(tail, id, burst, arrival, 0);
+	ptrTemp = new ProcessNode(tail, id, burst, arrival, 0);
 
 	if (tail != 0)
 	{
-		tail->setNext(ptrNode);
-		tail = ptrNode;
+		tail->setNext(ptrTemp);
+		tail = ptrTemp;
 	}
 	else
 	{
-		head = tail = ptrNode;
+		head = tail = ptrTemp;
 	}
 
-	ptrNode = 0;
+	ptrTemp = 0;
+}
 
+void ProcessList::addToHead(int id, int burst, int arrival)
+{
+	ptrTemp = new ProcessNode(0, id, burst, arrival, head);
+
+	if (head != 0)
+	{
+		head->setPrev(ptrTemp);
+		head = ptrTemp;
+	}
+	else
+	{
+		head = tail = ptrTemp;
+	}
+
+	ptrTemp = 0;
+}
+
+void ProcessList::deleteFromHead()
+{
+	ptrTemp = head->getNext();
+	delete head;
+	head = ptrTemp;
+	ptrTemp = 0;
+	delete ptrTemp;
 }
 
 void ProcessList::printList(int amount, int arrival)
 {
-	ProcessNode* ptrNode = head;
+	ptrTemp = head;
 	cout << "Here are all your processes:\n\n";
 
 	if (arrival == 1)
 	{
 		for (int i = 0; i < amount; i++)
 		{
-			cout << i + 1 << ". PID: " << ptrNode->getPID() << ", Burst Time : " << ptrNode->getBT() << ", Arrival Time: " << ptrNode->getAT() << "\n";
-			ptrNode = ptrNode->getNext();
+			cout << i + 1 << ". PID: " << ptrTemp->getPID() << ", Burst Time : " << ptrTemp->getBT() << ", Arrival Time: " << ptrTemp->getAT() << "\n";
+			ptrTemp = ptrTemp->getNext();
 		}
 	}
 	else
 	{
 		for (int i = 0; i < amount; i++)
 		{
-			cout << i + 1 << ". PID: " << ptrNode->getPID() << ", Burst Time : " << ptrNode->getBT() << "\n";
-			ptrNode = ptrNode->getNext();
+			cout << i + 1 << ". PID: " << ptrTemp->getPID() << ", Burst Time : " << ptrTemp->getBT() << "\n";
+			ptrTemp = ptrTemp->getNext();
 		}
 	}
 }
