@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-//comment actualizado
+//Otra cosa
 class ProcessNode
 {
 public:
