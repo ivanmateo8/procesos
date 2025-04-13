@@ -138,6 +138,30 @@ void ProcessList::addToTail(int id, int burst, int arrival)
 	ptrTemp = 0;
 }
 
+void ProcessList::orderArrival()
+{
+	ptrTemp = head;
+	while (ptrTemp != 0)
+	{
+		if (ptrTemp->getAT() > head->getAT())
+		{
+			ptrTemp = ptrTemp->getNext();
+			deleteFromHead();
+			addToTail(ptrTemp->getPID(), ptrTemp->getBT(), ptrTemp->getAT());
+		}
+		else
+			ptrTemp = ptrTemp->getNext();
+	}
+}
+
+bool ProcessList::isEmpty()
+{
+	if (head == 0)
+		return true;
+	else
+		return false;
+}
+
 void ProcessList::addToHead(int id, int burst, int arrival)
 {
 	ptrTemp = new ProcessNode(0, id, burst, arrival, head);
